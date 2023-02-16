@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <script>
+        function game() {
+            let playerScore = 0;
+            let computerScore = 0;
+                //rework with a while loop:playerScore&&computerScore<5
+            for (let i = 0; i < 5; ++i) {
+                let playerSelection = prompt("3...2...1...SHOOT!").toLowerCase();
+                let computerSelection = getComputerChoice().toLowerCase();
+                //add a function to uppercase selections
+                console.log(playerSelection);
+                console.log(computerSelection);
+
+                let outcome = playRound(playerSelection, computerSelection);
+                console.log(outcome);
+                if (outcome === "You win! " + playerSelection +
+                    " beats " + computerSelection) {
+                    ++playerScore;
+                } else if (outcome === "You lose! " + computerSelection +
+                    " beats " + playerSelection) {
+                    ++computerScore;
+                }
+            }
+            console.log("Final score: Player: " + playerScore + " Computer: " + computerScore);
+            if (playerScore > computerScore) {
+                console.log("You Win!");
+            } else if (playerScore < computerScore) {
+                console.log("Your lose!");
+            } else {
+                console.log("Its a tie!");
+                
+            }
+        }
+
+        function getComputerChoice() {
+            let choices = ["Rock", "Paper", "Scissors"];
+            let randomNum = Math.floor(Math.random() * 3);
+            return choices[randomNum];
+        };
+
+        function playRound(playerSelection, computerSelection) {
+            if (playerSelection === computerSelection) {
+                return "Tie!";
+            } else if ((playerSelection === "rock" && computerSelection === "scissors") ||
+                (playerSelection === "paper" && computerSelection === "rock") ||
+                (playerSelection === "scissors" && computerSelection === "paper")) {
+                return "You win! " + playerSelection + " beats " + computerSelection;
+            } else {
+                return "You lose! " + computerSelection + " beats " + playerSelection;
+            }
+        }
+        game();
+    </script>
+</body>
+
+</html>
