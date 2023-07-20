@@ -6,31 +6,140 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
+    <link rel="stylesheet" href="styles.css">
 </head>
 
-<body>
-    <script>
-        function game() {
-            let playerScore = 0;
-            let computerScore = 0;
-                //rework with a while loop:playerScore&&computerScore<5
-            for (let i = 0; i < 5; ++i) {
-                let playerSelection = prompt("3...2...1...SHOOT!").toLowerCase();
-                let computerSelection = getComputerChoice().toLowerCase();
-                //add a function to uppercase selections
-                console.log(playerSelection);
-                console.log(computerSelection);
+<body id="content">
 
-                let outcome = playRound(playerSelection, computerSelection);
-                console.log(outcome);
-                if (outcome === "You win! " + playerSelection +
-                    " beats " + computerSelection) {
-                    ++playerScore;
-                } else if (outcome === "You lose! " + computerSelection +
-                    " beats " + playerSelection) {
-                    ++computerScore;
+    <script>
+        let cArea=document.getElementById("content");
+
+            //Heading field
+            let heading_container=document.createElement("div");
+            heading_container.setAttribute("id", "title_container");
+            cArea.appendChild(heading_container);
+
+            let heading=document.createElement("h1");
+            heading.innerHTML="Rock Paper Scissors";
+            heading_container.appendChild(heading);
+            //End heading field
+
+        let numRounds=5;
+        let playerScore=0;
+        let computerScore=0;
+
+        function game(){
+
+
+            let button_container=document.createElement("div");
+            button_container.setAttribute("id","button_container");
+            cArea.appendChild(button_container);
+
+            let rockButton=document.createElement("button");
+            rockButton.setAttribute("id", "rock_button");
+            rockButton.innerHTML="Rock";
+            button_container.appendChild(rockButton);
+            rockButton.addEventListener("click", ()=>playRound('rock'));
+
+            let paperButton=document.createElement("button");
+            paperButton.setAttribute("id", "paper_button");
+            paperButton.innerHTML="Paper";
+            button_container.appendChild(paperButton);
+            paperButton.addEventListener("click", ()=>{playRound('paper')});
+
+            let scissorsButton=document.createElement("button");
+            scissorsButton.setAttribute("id", "scissors_button");
+            scissorsButton.innerHTML="Scissors";
+            button_container.appendChild(scissorsButton);
+            scissorsButton.addEventListener("click", ()=>{playRound('scissors')});
+           
+        };
+
+        function playRound(playerSelection) {
+            
+            let computerSelection = getComputerChoice().toLowerCase();
+
+            if (playerSelection === computerSelection) {
+                console.log("tie");
+                displayResult("Tie!");
+                
+                numRounds--;
+                clearScore();
+                displayScore();
+                console.log(playerScore);
+                console.log(computerScore);
+                if(numRounds===0){
+                    clearRound();
+                  
+                    endGame();
                 }
+                return;
+                
+            } else if ((playerSelection === "rock" && computerSelection === "scissors") ||
+                (playerSelection === "paper" && computerSelection === "rock") ||
+                (playerSelection === "scissors" && computerSelection === "paper")) {
+                    console.log("you win");
+                    displayResult("You win! " + playerSelection + " beats " + computerSelection);
+                    
+                    playerScore++;
+                    numRounds--;
+                    clearScore();
+                displayScore();
+                    console.log(playerScore);
+                    console.log(computerScore);
+                    if(numRounds===0){
+                    clearRound();
+                   
+                    endGame();
+                }
+                    return;
+                    
+            } else {
+                console.log("you lose");
+                displayResult("You lose! " + computerSelection + " beats " + playerSelection);
+                
+                computerScore++;
+                numRounds--;
+                clearScore();
+                displayScore();
+                console.log(playerScore);
+                console.log(computerScore);
+                if(numRounds===0){
+                    clearRound();
+                    endGame();
+                }
+                return;
+                
             }
+        };
+
+        function endGame(){
+            displayResult("Game Over: Final Results");
+        }
+
+function displayScore(){
+            
+            let scoreBox=document.createElement("div");
+            scoreBox.setAttribute("id", "score_box");
+
+            let playerScoreBox=document.createElement("div");
+            playerScoreBox.setAttribute("id", "player_score_box");
+            let computerScoreBox=document.createElement("div");
+            computerScoreBox.setAttribute("id", "computer_score_box");
+
+            let playerScoreText=document.createElement("p");
+            let computerScoreText=document.createElement("p");
+            playerScoreText.innerText= "Player: " + playerScore;
+            computerScoreText.innerText= "Computer: " + computerScore;
+
+            scoreBox.appendChild(playerScoreBox);
+            scoreBox.appendChild(computerScoreBox);
+            playerScoreBox.appendChild(playerScoreText);
+            computerScoreBox.appendChild(computerScoreText);
+            cArea.insertBefore(scoreBox,cArea.firstChild);
+
+
+/*
             console.log("Final score: Player: " + playerScore + " Computer: " + computerScore);
             if (playerScore > computerScore) {
                 console.log("You Win!");
@@ -40,26 +149,57 @@
                 console.log("Its a tie!");
                 
             }
-        }
+*/
 
+}
+            //Total field
+
+            //End total field
+            
+            function clearContent(){
+            let cArea = document.getElementById("content");
+             if(document.getElementById("output")!=null){
+             
+             let contentDiv = document.getElementById("output");
+             cArea.removeChild(contentDiv);
+    }
+}
+            function clearScore(){
+                let areaToClear=document.getElementById("score_box");
+                cArea.removeChild(areaToClear);
+            }
+            function displayResult(string) {
+                clearContent();
+                let output=document.createElement("div");
+                output.setAttribute("id", "output");
+                cArea.appendChild(output);
+
+                let resultText=document.createElement("p");
+                resultText.setAttribute("id","text");
+                resultText.innerText=string;
+                output.appendChild(resultText);
+
+            }
+ 
         function getComputerChoice() {
+           
             let choices = ["Rock", "Paper", "Scissors"];
             let randomNum = Math.floor(Math.random() * 3);
             return choices[randomNum];
         };
 
-        function playRound(playerSelection, computerSelection) {
-            if (playerSelection === computerSelection) {
-                return "Tie!";
-            } else if ((playerSelection === "rock" && computerSelection === "scissors") ||
-                (playerSelection === "paper" && computerSelection === "rock") ||
-                (playerSelection === "scissors" && computerSelection === "paper")) {
-                return "You win! " + playerSelection + " beats " + computerSelection;
-            } else {
-                return "You lose! " + computerSelection + " beats " + playerSelection;
-            }
-        }
+       function clearRound(){
+        let cArea = document.getElementById("content");
+             if(document.getElementById("button_container")!=null){
+             
+             let contentDiv = document.getElementById("button_container");
+             cArea.removeChild(contentDiv);
+       }
+    };
+        displayScore();
         game();
+    
+   
     </script>
 </body>
 
